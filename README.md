@@ -15,7 +15,7 @@ Since visual SLAM is sensitive to the illumination and environment changing, som
 - smooth_curve_new.py (Cathy Chen chongchen.pku@gmail.com)<br />
 This script provides the core function in *trajectory_generation* package, and is the courtesy from a math genius. It provides a cubic curve with continuous curvature given a starting pose and a destination pose in 2-D space.
 
-In real application scenario, less than (**1 cm, 1 degree**) accurary is achieved for the docking task, with multiple people walking around in the scene background.  The robot can start from any initial position that can see the Aruco marker and less than 3m from it. The** 3m **range can increase with extending mapping effort.
+In real application scenario, less than (**1 cm, 1 degree**) accurary is achieved for the docking task, with multiple people walking around in the scene background.  The robot can start from any initial position that can see the Aruco marker and less than 3m from it. The **3m** range can increase with extending mapping effort.
 
 ##  How to use (tested on ubuntu16 & Debian Stretch)
 
@@ -59,15 +59,15 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 
 	 It integrates UcoSlam absolute pose and rf2o_laser_odometry to get a robust absolute pose in the map. Due to illumination changes and dynamic environment, camera localization might loses track or jumps drasitically. When camera pose is invalid, use lidar odometry increment to keep tracking until camera pose is valid again. Pseudo code for getting robust robot pose:
 
-    function get_robust_pose(last_robust_pose, last_lidar_pose, thredshold):
-		get current_camera_pose, current_lidar_pose
-		if dis(current_camera_pose, last_robust_pose) > thredshold:
-			lidar_pose_increment = current_lidar_pose - last_lidar_pose
-			current_robust_pose = last_robust_pose + lidar_pose_increment
-		else:
-			current_robust_pose = current_camera_pose
-		last_robust_pose = current_robust_pose
-		last_lidar_pose = current_lidar_pose
+	    function get_robust_pose(last_robust_pose, last_lidar_pose, thredshold):
+			get current_camera_pose, current_lidar_pose
+			if dis(current_camera_pose, last_robust_pose) > thredshold:
+				lidar_pose_increment = current_lidar_pose - last_lidar_pose
+				current_robust_pose = last_robust_pose + lidar_pose_increment
+			else:
+				current_robust_pose = current_camera_pose
+			last_robust_pose = current_robust_pose
+			last_lidar_pose = current_lidar_pose
 
 - trajectory_generation
 
