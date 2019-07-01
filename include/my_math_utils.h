@@ -114,20 +114,12 @@ struct TimerAvrg{
 
 void  getQuatAndTransfromMatrix44( Eigen::Matrix4f &M_in ,double &qx,double &qy,double &qz,double &qw,double &tx,double &ty,double &tz)
 {
-/*    //get the 3d part of matrix and get quaternion
-    assert(M_in.total()==16);
-    cv::Mat M;
-    M_in.convertTo(M,CV_64F);
-    cv::Mat r33=cv::Mat ( M,cv::Rect ( 0,0,3,3 ) );*/
 
-
-    //use now eigen
     Eigen::Matrix3f e_r33;
     for(int i=0;i<3;i++)
         for(int j=0;j<3;j++)
             e_r33(i,j)= M_in(i,j);
 
-    //now, move to a angle axis
     Eigen::Quaternionf q(e_r33);
     qx=q.x();
     qy=q.y();

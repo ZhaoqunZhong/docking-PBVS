@@ -52,7 +52,6 @@ class pose_fuser:
 			else: #after first cam pose
 				cam_cur_trans = cam_pose[0]
 				cam_lastRobust_dis = math.sqrt(sum([(a - b)**2 for a, b in zip(cam_cur_trans, self.robust_last_pose[0])]))
-				#print "cam_lastRobust_dis: ", cam_lastRobust_dis
 				if cam_lastRobust_dis > self.cam_jump_thred: #cam pose jumped
 					#get last valid pose and add current step lidar increment to it
 					lidar_incre_mtrx = self.computPoseIncreMtrx(self.lidar_last_pose, lidar_pose)

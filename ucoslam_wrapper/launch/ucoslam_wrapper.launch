@@ -19,9 +19,6 @@
 	    <param name="uco_params_file" value="$(find ucoslam_wrapper)/src/myparams.yml"/>
 	    <param name="uco_map_file" value="$(find ucoslam_wrapper)/src/world.map"/>
 	    <param name="skip_poor_image_cnt" value="10"/>
-	    <!--param name="base_to_cam_dx" value="$(arg base_to_cam_dx)" />
-	    <param name="base_to_cam_dy" value="$(arg base_to_cam_dy)" />
-	    <param name="base_to_cam_dz" value="$(arg base_to_cam_dz)" /-->
   	</node>
 
 	<node pkg="tf" type="static_transform_publisher" name="base_link_to_cam" args="$(arg base_to_cam_dx) $(arg base_to_cam_dy) $(arg base_to_cam_dz) 0 0 0 $(arg base_link_id) camera_link 100" /> 

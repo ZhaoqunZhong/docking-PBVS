@@ -2,5 +2,4 @@
 	<include file="$(find ucoslam_wrapper)/launch/ucoslam_wrapper.launch"/>
 	<include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
 	<node name="localization_module_node" pkg="localization_module" type="uco_rf2o_fusion.py" output="screen" respawn="false"/>
-
 </launch>

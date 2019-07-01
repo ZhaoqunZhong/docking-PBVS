@@ -11,7 +11,6 @@
   </node>
 
 
-    <!--Didn't mofidy the PID package -->
   <arg name="pid-limit" default="2" />
   <arg name="windup-limit" default="1" />
 

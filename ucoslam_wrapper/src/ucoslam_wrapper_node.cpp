@@ -16,7 +16,6 @@
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
-//#include <ros/package.h>
 
 class ucoslam_wrapper
 {
@@ -33,9 +32,7 @@ public:
         node_priv.param<std::string>("uco_params_file", uco_params_file, "");
         node_priv.param<std::string>("uco_map_file", uco_map_file, "");
         node_priv.param<int>("skip_poor_image_cnt", skip_poor_image_cnt_, 10);
-        // nh_.param<double>(nh_name_+"/base_to_cam_dx", base_to_cam_dx_, 0);
-        // nh_.param<double>(nh_name_+"/base_to_cam_dy", base_to_cam_dy_, 0);
-        // nh_.param<double>(nh_name_+"/base_to_cam_dz", base_to_cam_dz_, 0);
+
         d435_color_sub_ = nh_.subscribe("/camera/color/image_raw", 1, &ucoslam_wrapper::colorImageCbk, this);
         pose_valid_pub_ = nh_.advertise<std_msgs::Int8>("uco_pose_valid_flag", 1);
 
@@ -53,10 +50,7 @@ public:
             //ros::spinOnce();
             ros::Duration(0.1).sleep();
         }
-        // tf::StampedTransform T_baselink_cam;
-        // tf_ls_.lookupTransform(base_link_id_, cam_link_id_, ros::Time(0), T_baselink_cam);
-        // T_BC_.setOrigin( T_baselink_cam.getOrigin() );
-        // T_BC_.setRotation( T_baselink_cam.getRotation() );
+
         while (ros::ok() && !tf_ls_.frameExists(cam_link_id_))
         {
             //ros::spinOnce();
@@ -102,19 +96,11 @@ public:
         {
 
             cv::Mat M_mC = M_CM_.inv(); 
-/*            Eigen::Matrix4f eM4;
-            for(int i=0;i<3;i++)
-                for(int j=0;j<3;j++)
-                    eM4(i,j)= M_mC.at<double>(i,j);
-            getQuatAndTransfromMatrix44(eM4, qx, qy, qz, qw, tx, ty, tz);*/
+
             getQuaternionAndTranslationfromMatrix44(M_mC, qx, qy, qz, qw, tx, ty, tz);
             T_mC.setOrigin( tf::Vector3(tx, ty, tz) );
             T_mC.setRotation( tf::Quaternion( qx, qy, qz, qw) );
-/*            T_Mm.setOrigin( tf::Vector3(base_to_cam_dx_, base_to_cam_dy_, base_to_cam_dz_) );
-            tf::Quaternion q_Mm;
-            //q_Mm.setEuler(-M_PI/2, 0, -M_PI/2); //This api function is not correct.
-            q_Mm.setRPY(-M_PI/2, 0, -M_PI/2);
-            T_Mm.setRotation( q_Mm );*/
+
             T_MB = T_B_Color_*T_mC*(T_B_Color_.inverse());
             tf_br_.sendTransform(tf::StampedTransform(T_MB, ros::Time::now(), map_frame_id_, base_link_id_));
             //cout<<tx<<" "<<ty<<" "<<tz<<" "<<qx<<" "<<qy<<" "<<qz<<" "<<qw<<""<<endl;
@@ -186,13 +172,11 @@ private:
     ros::Publisher pose_valid_pub_;
     tf::TransformBroadcaster tf_br_;
     tf::TransformListener tf_ls_; 
-    //tf::Transform T_BC_;
     tf::Transform T_B_Color_;
     int skip_pose_num_;
     int skip_poor_image_cnt_=0;
     std::string map_frame_id_, base_link_id_, cam_link_id_;
     double base_to_cam_dx_, base_to_cam_dy_, base_to_cam_dz_;
-    //std::bool undistort_;
 
     ucoslam::UcoSlam uco_slam_;
     ucoslam::ImageParams image_params_;

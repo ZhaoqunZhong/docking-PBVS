@@ -145,23 +145,12 @@ public:
 	void followLine(vector<double> start_pt, vector<double> end_pt, double v_start, double v_max, double v_end)
 	{
 		enablePid();
-		//ROS_INFO("followLine function entered.");
-		
-		//static double des_line_k = (start_pt[0] - end_pt[0])/(end_pt[1] - start_pt[1]);
-		//static double des_line_b = ( end_pt[1]*(end_pt[1] - start_pt[1]) - end_pt[0]*(start_pt[0] - end_pt[0]) )/ (end_pt[1] - start_pt[1]);
-		//if (mpCenterPos_["tz"] > des_line_k*mpCenterPos_["tx"] + des_line_b - lineFl_thre_)
 
 		if ( euclideanDistance(vector<double>{mpCenterPos_["tx"], mpCenterPos_["ty"]}, end_pt) < lineFl_thre_ )
 		{
 			ROS_INFO("Finished line following.");
 			sendZeroSpdAndStopPid();
 			step_count_++;
-		// cout << "step_count_: " << step_count_ << endl; 
-		// cout << "mpCenterPos_[tz]: " << mpCenterPos_["z"] << endl;
-		// cout << "mpCenterPos_[tx]: " << mpCenterPos_["x"] << endl;
-		// cout << "euc_dis to end_pt: " << euclideanDistance(vector<double>{mpCenterPos_["x"], mpCenterPos_["z"]}, end_pt) << endl;
-		// cout << "line_err_.data: " << line_err_.data << endl;
-		// cout << "agl_err_ in degree: " << agl_err_.data*180/M_PI << endl;
 			return;
 		}
 		//Speed allocation
@@ -185,10 +174,7 @@ public:
 		if (vy < 0)
 			ROS_INFO("Missed the end_pt on the finishing line.");
 			
-		//line_err_.data = pointToLineDistance(vector<double>{mpCenterPos_["tx"], mpCenterPos_["ty"]}, start_pt, end_pt);
 		line_err_.data = mpCenterPos_["tx"];
-		//agl_err.data = angleBetweenVectors(vector<double>{mpCenterPos_["tx"], mpCenterPos_["ty"]}, start_pt, end_pt);
-		//static double line_angle = -atan((end_pt[0] - start_pt[0])/(end_pt[1] - start_pt[1]));
 		double line_angle = M_PI/2;
 		agl_err_.data = line_angle - mpCenterPos_["theta"]; 
 		dErr_pub_.publish(line_err_);
@@ -204,10 +190,6 @@ public:
 		double angluar_speed = -linePidCtlEft_ - aglPidCtlEft_; 
 		v.angular.z = confineValue(angluar_speed, -agl_spd_limit_, agl_spd_limit_);
 		spdCtrl_pub_.publish(v);
-		//for pid debugging	
-		// std_msgs::Float64 vaz; 
-		// vaz.data = v.angular.z; 
-		// angularSpd_pub_.publish(vaz);
 	}
 	
 
@@ -223,7 +205,6 @@ public:
 
 	void rotateAngle(double obj_angle, double speed)
 	{
-		//ROS_INFO("rotateAngle function entered.");
 
 		double cur_angle = mpCenterPos_["theta"]; 
 
@@ -241,7 +222,6 @@ public:
 			step_count_++;
 			cout << "step_count_: " << step_count_ << endl; 
 			ROS_INFO("rotateAngle function finished.");
-			//ros::Duration(2).sleep();
 			return;
 		}
 		v.linear.x = 0;
@@ -256,7 +236,6 @@ public:
 
 	void sendZeroSpdAndStopPid()
 	{
-		//unique_lock<mutex> lock(mtx_);
 		geometry_msgs::Twist v;
 		v.linear.x = 0;
 		v.linear.y = 0;
@@ -295,7 +274,6 @@ private:
 	ros::Publisher angleSetpoint_pub_;
 	ros::Publisher dErr_pub_;
 	ros::Publisher aErr_pub_;
-	//ros::Publisher angularSpd_pub_;
 	ros::Publisher pid_enable_pub_;
 
 	ros::Subscriber lineCtlEft_sub_;

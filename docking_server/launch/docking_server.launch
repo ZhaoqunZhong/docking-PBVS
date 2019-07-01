@@ -1,5 +1,3 @@
 <launch>
 	<node name="docking_server_node" pkg="docking_server" type="docking_service_server.py" output="screen" respawn="false" args="" />
-	<!--node name="rqt_service_caller" pkg="rqt_service_caller" type="rqt_service_caller" output="screen" /-->
-
 </launch>

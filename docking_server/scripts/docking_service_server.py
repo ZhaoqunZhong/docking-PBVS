@@ -20,8 +20,6 @@ class docking_service_server:
 		self.undock_handles_inited = False
 
 	def init_lch_handles(self):
-		#self.cam_loc_launch = roslaunch.parent.ROSLaunchParent(self.uuid, [self.rospack.get_path('ucoslam_wrapper')+"/launch/ucoslam_wrapper.launch"])
-		#self.lidar_loc_launch = roslaunch.parent.ROSLaunchParent(self.uuid, [self.rospack.get_path('rf2o_laser_odometry')+"/launch/rf2o_laser_odometry.launch"])
 		self.loc_module_launch = roslaunch.parent.ROSLaunchParent(self.uuid, [self.rospack.get_path('localization_module')+"/launch/localization_module.launch"])
 		self.tra_gen_launch = roslaunch.parent.ROSLaunchParent(self.uuid, [self.rospack.get_path('trajectory_generation')+"/launch/trajectory_server.launch"])
 		self.tra_fl_launch = roslaunch.parent.ROSLaunchParent(self.uuid, [self.rospack.get_path('trajectory_following')+"/launch/trajectory_following.launch"])
@@ -55,8 +53,6 @@ if __name__ == '__main__':
 			ds.dock_called = False
 			if ds.lch_handles_inited == False:
 				ds.init_lch_handles()
-				#ds.cam_loc_launch.start()
-				#ds.lidar_loc_launch.start()
 				ds.loc_module_launch.start()
 				ds.tra_gen_launch.start()
 				ds.tra_fl_launch.start()
@@ -64,8 +60,6 @@ if __name__ == '__main__':
 		if ds.shutdown_called == True:
 			ds.shutdown_called = False
 			if ds.lch_handles_inited == True:
-				#ds.cam_loc_launch.shutdown()
-				#ds.lidar_loc_launch.shutdown()
 				ds.loc_module_launch.shutdown()
 				ds.tra_gen_launch.shutdown()
 				ds.tra_fl_launch.shutdown()
