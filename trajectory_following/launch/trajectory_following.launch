@@ -1,0 +1,45 @@
+<launch>
+
+  <node name="trajectory_following_node" pkg="trajectory_following" type="trajectory_following_node" output="screen" respawn="false"  args="">
+    <param name="agl_spd_limit"       value="0.5"/>
+    <param name="axial_spd_limit"     value="1.0"/>
+    <param name="docking_end_y"       value="-0.1"/>
+    <param name="angluar_speed"       value="0.2"/>
+    <param name="max_line_speed"      value="0.5"/>
+    <param name="line_follow_thred"   value="0.02"/>
+    <param name="angle_rotate_thred"  value="0.02"/>
+  </node>
+
+
+    <!--Didn't mofidy the PID package -->
+  <arg name="pid-limit" default="2" />
+  <arg name="windup-limit" default="1" />
+
+  <node name="controller" pkg="pid" type="controller" ns="position_pid" output="screen" >
+    <param name="Kp" value="1.0" />
+    <param name="Ki" value="0.01" />
+    <param name="Kd" value="0.0" />
+    <param name="upper_limit" value="$(arg pid-limit)" />
+    <param name="lower_limit" value="-$(arg pid-limit)" />
+    <param name="windup_limit" value="$(arg windup-limit)" />
+    <!--param name="max_loop_frequency" value="100.0" /-->
+    <!--param name="min_loop_frequency" value="100.0" /-->
+    <remap from="setpoint" to="/line_setpt"/>
+    <remap from="state" to="/line_err" />
+    <remap from="pid_enable" to="/enable_pid"/>
+   </node>
+  <node name="controller" pkg="pid" type="controller" ns="angle_pid" output="screen" >
+    <param name="Kp" value="1" />
+    <param name="Ki" value="0.05" />
+    <param name="Kd" value="0.0" />
+    <param name="upper_limit" value="$(arg pid-limit)" />
+    <param name="lower_limit" value="-$(arg pid-limit)" />
+    <param name="windup_limit" value="$(arg windup-limit)" />
+    <!--param name="max_loop_frequency" value="100.0" /-->
+    <!--param name="min_loop_frequency" value="100.0" /-->
+    <remap from="setpoint" to="/angle_setpt"/>
+    <remap from="state" to="/agl_err" />
+    <remap from="pid_enable" to="/enable_pid"/>
+  </node>
+ 
+</launch>

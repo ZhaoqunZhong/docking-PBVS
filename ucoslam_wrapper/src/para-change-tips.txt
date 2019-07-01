@@ -1,0 +1,2 @@
+autoAdjustKpSensitivity: 0 ---Dont' change this, causes key frames to appear behind markers.
+minKFConfidence: 6.5000002384185791e-01	 ---Affects the mapping speed a lot.

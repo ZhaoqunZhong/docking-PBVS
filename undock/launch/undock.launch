@@ -1,0 +1,3 @@
+<launch>
+<node name="undock_node" pkg="undock" type="undock_node.py" output="screen" respawn="false" args="" />
+</launch>

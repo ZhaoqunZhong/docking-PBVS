@@ -1,0 +1,7 @@
+float32[] current_pt
+---
+float32[] closest_vector
+float32 distance
+float32 curvature
+int32 segment_index
+bool processed

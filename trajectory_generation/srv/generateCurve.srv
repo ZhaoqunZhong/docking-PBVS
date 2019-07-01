@@ -1,0 +1,6 @@
+float32[] start_vector
+float32[] end_vector
+int32 resolution
+---
+float32 angle_to_rotate
+int32 seg_num

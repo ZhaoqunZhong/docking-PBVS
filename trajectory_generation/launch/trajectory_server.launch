@@ -1,0 +1,3 @@
+<launch>
+<node name="trajectory_service_server" pkg="trajectory_generation" type="trajectory_server.py" output="screen" respawn="false" args="" />
+</launch>
