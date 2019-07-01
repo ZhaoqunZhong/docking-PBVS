@@ -3,7 +3,7 @@ This repo contains  ros packages for docking applications of AGVs, such as auto 
 
 Some of the packages are not the work of mine, but are part of the whole solution, so I list them here as reference.
 
-- pid (http://wiki.ros.org/pid) ```
+- pid (http://wiki.ros.org/pid)<br />
 
 This package is for PID control of trajectory following part. If only P is used, this package is not necessary, and the control can be realized by simply writing the `control_effort = k_p * error` to where it's required.
 
