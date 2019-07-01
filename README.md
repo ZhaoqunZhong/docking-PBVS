@@ -1,21 +1,21 @@
 # Docking for mobile robot (PBVS implementation)
-This repo contains  ros packages for docking applications of AGVs, such as auto charging  and interface with conveyor belt. Essentially it's a position based visual servoing(PBVS) implementation, thus includes a series of process of localzation in metric map, trajectory planning and trajectory following. It uses UcoSlam (http://www.uco.es/investiga/grupos/ava/node/62) for mapping the docking environment. Together with Aruco marker, it proves to be quite robust to dynamic background. 
+This repo contains  ros packages for docking applications of AGVs, such as auto charging  and interface with conveyor belt. Essentially it's a position based visual servoing(PBVS) implementation, thus includes a series of process of localization in metric map, trajectory planning and trajectory following. It uses UcoSlam (http://www.uco.es/investiga/grupos/ava/node/62) for mapping the docking environment. Together with Aruco marker, it proves to be quite robust to dynamic background. 
 
 Some of the packages are not the work of mine, but are part of the whole solution, so I list them here as reference.
 
 - pid (http://wiki.ros.org/pid)<br />
-This package is for PID control of trajectory following part. If only P is used, this package is not necessary, and the control can be realized by simply writing the `control_effort = k_p * error` to where it's required.
+This package is for PID control of trajectory following part. If only P is used, this package is not necessary, and the control can be realized by simply writing the `control_effort = k_p*error` to where it's required.
 
 - ucoslam-1.0.7 ( https://sourceforge.net/projects/ucoslam/)<br />
-This package is based on ORB_SLAM2 and provides useful additional features such as incoporating Aruco marker, ability to save/load map, and easy-to-use GUI tools.
+This package is based on ORB_SLAM2 and provides useful additional features such as incorporating Aruco marker, ability to save/load map, and easy-to-use GUI tools.
 
 - rf2o_laser_odometry (https://github.com/MAPIRlab/rf2o_laser_odometry)<br />
-Since visual SLAM is sensitive to the illumination and environment changing, sometimes in real application scenario, the localization result by UcoSlam is invalid. This package is used as auxillary odometry input when visual SLAM fails, to improve the robustness of localization. 
+Since visual SLAM is sensitive to the illumination and environment changing, sometimes in real application scenario, the localization result by UcoSlam is invalid. This package is used as auxiliary odometry input when visual SLAM fails, to improve the robustness of localization. 
 
 - smooth_curve_new.py (Cathy Chen chongchen.pku@gmail.com)<br />
 This script provides the core function in *trajectory_generation* package, and is the courtesy from a math genius. It provides a cubic curve with continuous curvature given a starting pose and a destination pose in 2-D space.
 
-In real application scenario, less than (**1 cm, 1 degree**) accurary is achieved for the docking task, with multiple people walking around in the scene background.  The robot can start from any initial position that can see the Aruco marker and less than 3m from it. The **3m** range can increase with extending mapping effort.
+In real application scenario, less than (**1 cm, 1 degree**) accuracy is achieved for the docking task, with multiple people walking around in the scene background.  The robot can start from any initial position that can see the Aruco marker and less than 3m from it. The **3m** range can increase with extending mapping effort.
 
 ##  How to use (tested on ubuntu16 & Debian Stretch)
 
@@ -32,7 +32,7 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 - Get eigen3
 
 	Download eigen3 from http://eigen.tuxfamily.org/index.php?title=Main_Page<br />
-	Copy subfolder **Eigen** to **usr/local/include**
+	Copy sub folder **Eigen** to **usr/local/include**
 
 - Possible issues
 
@@ -50,18 +50,18 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 	Call *Undock* to back out of the docking position.<br />
 	Call *shutdown* to shutdown the docking_server.
 
-## Package function explaination
+## Package function explanation
 - docking_server
 
-	It achieves launching and shuting down ROS nodes by *rosservice call*. Because the whole docking function consumes considerable CPU resource, it makes sense to only do the computation during docking and *hibernate* when robot is running other applications.
+	It achieves launching and shutting down ROS nodes by *ros service call*. Because the whole docking function consumes considerable CPU resource, it makes sense to only do the computation during docking and *hibernate* when robot is running other applications.
 
 - localization_module
 
-	It integrates UcoSlam absolute pose and rf2o_laser_odometry to get a robust absolute pose in the map. Due to illumination changes and dynamic environment, camera localization might loses track or jumps drasitically. When camera pose is invalid, use lidar odometry increment to keep tracking until camera pose is valid again. Pseudo code for getting robust robot pose in python style:
+	It integrates UcoSlam absolute pose and rf2o_laser_odometry to get a robust absolute pose in the map. Due to illumination changes and dynamic environment, camera localization might loses track or jumps drastically. When camera pose is invalid, use lidar odometry increment to keep tracking until camera pose is valid again. Pseudo code for getting robust robot pose in python style:
 	```python
-	def get_robust_pose(last_robust_pose, last_lidar_pose, thredshold):
+	def get_robust_pose(last_robust_pose, last_lidar_pose, threshold):
 		get current_camera_pose, current_lidar_pose
-		if dis(current_camera_pose, last_robust_pose) > thredshold:
+		if dis(current_camera_pose, last_robust_pose) > threshold:
 			lidar_pose_increment = current_lidar_pose - last_lidar_pose
 			current_robust_pose = last_robust_pose + lidar_pose_increment
 		else:
@@ -71,15 +71,14 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 	```
 - trajectory_generation
 
-	Given a start pose and a goal pose, the *generate_curve* rosservice call returns a order-3 trajectory with continuous curvature as the docking path, as shown in the following figure. 
+	Given a start pose and a goal pose, the *generate_curve* ros service call returns a order-3 trajectory with continuous curvature as the docking path, as shown in the following figure. 
 	![](generated-trajectory.png)
-	We pursue** continuous curvature **here because this kind of trajectory can gaurantee continuous (linear, angular) speed for a twist robot, which is the canonical velocity command type for AGVs. In contrast, low order trajectory such as piecewise line or arc will cause the robot to *shake* at the connection point of different segment types, because discontinuous curvature causes sudden change of angular speed. 
-	
-	Given the current robot pose, the *follow_curve* rosservice call returns the trajectory following error (distance and orientation) to the closest point on the generated trajectory for close loop control with PID. 
-	
+	We pursue **continuous curvature** here because this kind of trajectory can guarantee continuous (linear, angular) speed for a twist robot, which is the canonical velocity command type for AGVs. In contrast, low order trajectory such as piecewise line or arc will cause the robot to *shake* at the connection point of different segment types, because discontinuous curvature causes sudden change of angular speed. <br />
+	Given the current robot pose, the *follow_curve* ros service call returns the trajectory following error (distance and orientation) to the closest point on the generated trajectory for close loop control with PID. 
+
 - trajectory_following
 
-	This package implements a PID controller and a state machine for trajecotry following. It uses a simple line trajectory instead of the one generated by the trajectory server to simplify the demonstration of the concept. It would be straightfoward to implement the curve following function using the rosservice call results from *trajectory_generation* package, in a same manner as the *followLine* function in the package. 
+	This package implements a PID controller and a state machine for trajectory following. It uses a simple line trajectory instead of the one generated by the trajectory server to simplify the demonstration of the concept. It would be straightforward to implement the curve following function using the ros service call results from *trajectory_generation* package, in a same manner as the *followLine* function in the package. 
 
 ## High level information flow of the docking process
 ![](docking-information-flow.png)
