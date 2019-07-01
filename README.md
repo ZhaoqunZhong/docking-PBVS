@@ -1,15 +1,23 @@
 # Docking for mobile robot (PBVS implementation)
 This repo contains  ros packages for docking applications of AGVs, such as auto charging  and interface with conveyor belt. Essentially it's a position based visual servoing(PBVS) implementation, thus includes a series of process of localzation in metric map, trajectory planning and trajectory following. It uses UcoSlam (http://www.uco.es/investiga/grupos/ava/node/62) for mapping the docking environment. Together with Aruco marker, it proves to be quite robust to dynamic background. 
 
-Some of the packages are not the work of mine, but are part of the whole solution, so I list them here as reference. 
+Some of the packages are not the work of mine, but are part of the whole solution, so I list them here as reference.\\
+
 - pid (http://wiki.ros.org/pid)
+
 This package is for PID control of trajectory following part. If only P is used, this package is not necessary, and the control can be realized by simply writing the `control_effort = k_p * error` to where it's required.
+
 - ucoslam-1.0.7 ( https://sourceforge.net/projects/ucoslam/)
+
 This package is based on ORB_SLAM2 and provides useful additional features such as incoporating Aruco marker, ability to save/load map, and easy-to-use GUI tools.
+
 - rf2o_laser_odometry (https://github.com/MAPIRlab/rf2o_laser_odometry)
+
 Since visual SLAM is sensitive to the illumination and environment changing, sometimes in real application scenario, the localization result by UcoSlam is invalid. This package is used as auxillary odometry input when visual SLAM fails, to improve the robustness of localization. 
+
 - smooth_curve_new.py (Cathy Chen chongchen.pku@gmail.com)
-This script provides the core function in *trajectory_generation* package, and is the courtesy from a math genius. It provides a cubic curve with continuous curvature given a starting pose and a destination pose in 2-D space. 
+
+This script provides the core function in *trajectory_generation* package, and is the courtesy from a math genius. It provides a cubic curve with continuous curvature given a starting pose and a destination pose in 2-D space. \\
 
 In real application scenario, less than (**1 cm, 1 degree**) accurary is achieved for the docking task, with multiple people walking around in the scene background.  The robot can start from any viewpoint that can see the Aruco marker and less than 3m from it. The** 3m **range can increase with extending mapping effort.
 
