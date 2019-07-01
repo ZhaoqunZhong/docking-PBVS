@@ -57,18 +57,7 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 
 - localization_module
 
-	It integrates UcoSlam absolute pose and rf2o_laser_odometry to get a robust absolute pose in the map. Due to illumination changes and dynamic environment, camera localization might loses track or jumps drasitically. When camera pose is invalid, use lidar odometry increment to keep tracking until camera pose is valid again. Pseudo code for getting robust robot pose:<br />
-	```python  
-	function get_robust_pose(last_robust_pose, last_lidar_pose, thredshold):
-		get current_camera_pose, current_lidar_pose
-		if dis(current_camera_pose, last_robust_pose) > thredshold:
-			lidar_pose_increment = current_lidar_pose - last_lidar_pose
-			current_robust_pose = last_robust_pose + lidar_pose_increment
-		else:
-			current_robust_pose = current_camera_pose
-		last_robust_pose = current_robust_pose
-		last_lidar_pose = current_lidar_pose
-	```
+	It integrates UcoSlam absolute pose and rf2o_laser_odometry to get a robust absolute pose in the map. Due to illumination changes and dynamic environment, camera localization might loses track or jumps drasitically. When camera pose is invalid, use lidar odometry increment to keep tracking until camera pose is valid again. Pseudo code for getting robust robot pose in python style:
 	```python
 	def get_robust_pose(last_robust_pose, last_lidar_pose, thredshold):
 		get current_camera_pose, current_lidar_pose
