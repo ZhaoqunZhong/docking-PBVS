@@ -19,11 +19,11 @@ In real application scenario, less than (**1 cm, 1 degree**) accurary is achieve
 
 ##  How to use (tested on ubuntu16 & Debian Stretch)
 
--  Install UcoSlam
+- Install UcoSlam
 
 	Follow the documentation from http://www.uco.es/investiga/grupos/ava/node/62
 
--  Install drivers for your RGB and Lidar sensors
+- Install drivers for your RGB and Lidar sensors
 
 	The code in this repo uses d435 for RGB image, but notice that any RGB sensor can be used, such as a cheap web camera. Of course, the performance will increase with higher resolution and frame rate of the sensor. 
 
