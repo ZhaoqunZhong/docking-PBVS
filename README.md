@@ -83,3 +83,6 @@ In real application scenario, less than (**1 cm, 1 degree**) accuracy is achieve
 
 ## High level information flow of the docking process
 ![](docking-information-flow.png)
+
+------------
+If you benefit from this project, please kindly :fa-star: it!
